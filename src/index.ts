@@ -5,6 +5,8 @@ export default {
       const url = new URL(req.url);
       const bookmarkListId = url.searchParams.get("bookmarkListId");
 
+      console.log("Bookmark List ID:", bookmarkListId);
+
       if (!bookmarkListId) {
         return new Response(
           JSON.stringify({ error: "bookmarkListId is required" }),
