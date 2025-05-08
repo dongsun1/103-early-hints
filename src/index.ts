@@ -38,12 +38,15 @@ export default {
       });
     } catch (error) {
       // 오류 발생 시 500 응답 반환
-      return new Response(JSON.stringify({ error: "Error fetching data" }), {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      return new Response(
+        JSON.stringify({ errorMessage: "Error fetching data", error }),
+        {
+          status: 500,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
     }
   },
 } satisfies ExportedHandler;
