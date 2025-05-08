@@ -42,7 +42,10 @@ export default {
       // 오류 발생 시 500 응답 반환
       console.error(error);
       return new Response(
-        JSON.stringify({ errorMessage: "Error fetching data", error }),
+        JSON.stringify({
+          errorMessage: "Error fetching data",
+          error: JSON.stringify(error, null, 2),
+        }),
         {
           status: 500,
           headers: {
