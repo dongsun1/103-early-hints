@@ -38,6 +38,7 @@ export default {
       });
     } catch (error) {
       // 오류 발생 시 500 응답 반환
+      console.error(error);
       return new Response(
         JSON.stringify({ errorMessage: "Error fetching data", error }),
         {
