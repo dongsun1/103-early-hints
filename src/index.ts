@@ -1,33 +1,38 @@
-const CSS = "body { color: red; }";
-const HTML = `
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Early Hints test</title>
-    <link rel="stylesheet" href="/test.css">
-</head>
-<body>
-    <h1>Early Hints test page</h1>
-</body>
-</html>
-`;
-
 export default {
-  async fetch(req): Promise<Response> {
-    // If request is for test.css, serve the raw CSS
-    if (/test\.css$/.test(req.url)) {
-      return new Response(CSS, {
+  async fetch(req: Request): Promise<Response> {
+    try {
+      // 북마크 목록 ID 설정 (필요에 따라 변경)
+      const bookmarkListId = "5dc83bf226254a9d833873224ff3e44f";
+      const apiUrl = `https://pages.map.naver.com/save-pages/api/maps-bookmark/v3/shares/${bookmarkListId}/bookmarks?placeInfo=true&start=0&limit=20&sort=lastUseTime&createIdNo=true`;
+
+      // API 요청
+      const apiResponse = await fetch(apiUrl, {
+        method: "GET",
         headers: {
-          "content-type": "text/css",
+          "User-Agent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
         },
       });
-    } else {
-      // Serve raw HTML using Early Hints for the CSS file
-      return new Response(HTML, {
+
+      if (!apiResponse.ok) {
+        throw new Error("API 요청 실패");
+      }
+
+      const data = await apiResponse.json();
+      const bookmarkList = data.bookmarkList.map((b: any) => b.sid);
+
+      // JSON 형식으로 데이터 반환
+      return new Response(JSON.stringify({ bookmarkList }), {
         headers: {
-          "content-type": "text/html",
-          link: "</test.css>; rel=preload; as=style",
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      // 오류 발생 시 500 응답 반환
+      return new Response(JSON.stringify({ error: "Error fetching data" }), {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
         },
       });
     }
