@@ -1,8 +1,17 @@
 export default {
   async fetch(req: Request): Promise<Response> {
     try {
-      // 북마크 목록 ID 설정 (필요에 따라 변경)
-      const bookmarkListId = "5dc83bf226254a9d833873224ff3e44f";
+      // 요청 URL에서 bookmarkListId 추출 (쿼리 파라미터로 전달됨)
+      const url = new URL(req.url);
+      const bookmarkListId = url.searchParams.get("bookmarkListId");
+
+      if (!bookmarkListId) {
+        return new Response(
+          JSON.stringify({ error: "bookmarkListId is required" }),
+          { status: 400, headers: { "Content-Type": "application/json" } }
+        );
+      }
+
       const apiUrl = `https://pages.map.naver.com/save-pages/api/maps-bookmark/v3/shares/${bookmarkListId}/bookmarks?placeInfo=true&start=0&limit=20&sort=lastUseTime&createIdNo=true`;
 
       // API 요청
