@@ -19,10 +19,6 @@ export default {
       // API 요청
       const apiResponse = await fetch(apiUrl, {
         method: "GET",
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
-        },
       });
 
       if (!apiResponse.ok) {
